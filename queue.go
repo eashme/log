@@ -35,6 +35,9 @@ func NewKafkaCli(topic string, broker ...string) (*KafkaCli, error) {
 	conf.Version = sarama.V0_11_0_0
 	conf.Producer.Interceptors = []sarama.ProducerInterceptor{cli}
 	conf.ChannelBufferSize = 10
+	conf.Producer.Retry.Max = 3
+	conf.Producer.RequiredAcks = sarama.WaitForAll
+	conf.Producer.Return.Successes = true
 
 	producer, err := sarama.NewAsyncProducer(cli.brokers, conf)
 	if err != nil {
@@ -42,6 +45,14 @@ func NewKafkaCli(topic string, broker ...string) (*KafkaCli, error) {
 		return nil, err
 	}
 	cli.producer = producer
+
+	// 错误日志
+	go func() {
+		for err := range producer.Errors() {
+			logrus.Errorf("failed send msg(%s) err(%v):", Json(err.Msg), err.Err)
+		}
+	}()
+
 	return cli, nil
 }
 
@@ -61,4 +72,9 @@ func (cli *KafkaCli) Send(msg []byte) {
 
 func (cli *KafkaCli) Close() {
 	cli.producer.AsyncClose()
+}
+
+func Json(v interface{}) string {
+	b, _ := json.Marshal(v)
+	return string(b)
 }
