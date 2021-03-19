@@ -18,11 +18,7 @@ func (cli *KafkaCli) Levels() []logrus.Level {
 }
 
 func (cli *KafkaCli) Fire(entry *logrus.Entry) error {
-	b, err := json.Marshal(entry)
-	if err != nil {
-		return err
-	}
-	cli.Send(b)
+	cli.Send(entry.Message)
 	return nil
 }
 
@@ -60,11 +56,11 @@ func (*KafkaCli) OnSend(msg *sarama.ProducerMessage) {
 	logrus.Info("send msg %s", msg.Value)
 }
 
-func (cli *KafkaCli) Send(msg []byte) {
+func (cli *KafkaCli) Send(msg string) {
 	go func() {
 		cli.producer.Input() <- &sarama.ProducerMessage{
 			Topic: cli.topic, Key: nil,
-			Value:     sarama.ByteEncoder(msg),
+			Value:     sarama.StringEncoder(msg),
 			Timestamp: time.Now(),
 		}
 	}()
