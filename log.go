@@ -23,9 +23,10 @@ func init() {
 		},
 		PrettyPrint: true,
 	})
-	level := logrus.WarnLevel
-	if os.Getenv("ENV_DEV") != "" {
-		level = logrus.DebugLevel
+
+	level := logrus.DebugLevel
+	if os.Getenv("RUN_LOCAL") != "" {
+		level = logrus.WarnLevel
 	}
 	ctx := context.Background()
 	Logger.SetLevel(level)
