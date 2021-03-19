@@ -1,0 +1,6 @@
+package coord_log
+
+const(
+	KAFKA_TOPIC_KEY = "QUEUE_KAFKA_TOPIC"
+	KAFKA_BROKER_KEY = "QUEUE_KAFKA_BROKER"
+)
