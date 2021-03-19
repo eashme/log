@@ -1,4 +1,4 @@
-package coord_log
+package log
 
 import (
 	"encoding/json"

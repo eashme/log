@@ -1,8 +1,8 @@
-package coord_log
+package log
 
 import (
 	"context"
-	cfg "github.com/jdy879526487/coord-cfg"
+	"github.com/jdy879526487/cfg"
 	"github.com/sirupsen/logrus"
 	"os"
 	"time"

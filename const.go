@@ -1,4 +1,4 @@
-package coord_log
+package log
 
 const(
 	KAFKA_TOPIC_KEY = "QUEUE_KAFKA_TOPIC"
